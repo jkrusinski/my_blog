@@ -1,0 +1,79 @@
+Blog features:
+    -Make Posts
+    -Date Posts
+    -Delete Posts
+    -Comment Posts -> stretch feature
+    -Search
+    -Edit Post
+    -Stats
+    -Images -> stretch feature
+    -View a list of all posts
+    -View a single post
+    -Social Buttons
+
+To-Do:
+
+1. Creating the Git Repository
+2. Cloning the Git Repository
+3. Creating some files
+    index.php - main page that lists all the posts
+    view_post.php - page to view one post
+    edit_post.php - page to create or edit a post
+
+Implementation:
+    1. Create a database schema (define the structure of the database)
+        -What tables are we going to need?
+        -What columns will they have?
+        -What are the relationships between the tables?
+        -Are there any columns in one table that correspond to columns in another?
+    2. Create INCLUDE File
+        -Access to database
+        -General functions
+        -Classes
+        -Write db_info.php that contains the MySQL server name, username, password, and database name.
+    3. Implement Post Insertion
+        FRONT END:
+            -Create edit_post.php and include db_info.php
+            -Form with a text box for author, a huge text box for the post body, and a submit button.
+            -Some text with directions on how to create/edit a post.
+        BACK END:
+            -Check if form was submitted
+            -Grab values from the text fields
+            -Input validation
+            -Insert a new row into the database
+    4. Reading
+        FRONT END:
+            -Create index.php and include db_info.php
+            -create HTML tags for the page layout but no styling yet
+        BACK END:
+            -Select all blog posts from MySQL
+            -Iterate through the result with 'foreach' and display each post
+                *title, date, author, and post body
+    5. Searching
+        -Create a search form with 1 text box and a submit button
+        -When form is submitted, run a SELECT query with a WHERE that
+
+
+        ...
+
+
+TABLES (in database: my_blog... [CREATE DATABASE my_blog;])
+    -Posts
+        *Columns:
+            1. id -> auto increment, primary key
+            2. title
+            3. author
+            4. date
+            5. contents
+        *Query:
+            CREATE TABLE posts (id INT NOT NULL AUTO_INCREMENT, title TEXT, author TEXT, date TEXT, contents TEXT, PRIMARY KEY(id));
+
+    -Tags
+        *Columns
+            1. id -> auto increment, primary key
+            2. post_id
+            3. tag
+        *Query:
+            CREATE TABLE tags (id INT NOT NULL AUTO_INCREMENT, post_id TEXT, tag TEXT, PRIMARY KEY(id));
+
+
