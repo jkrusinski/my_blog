@@ -12,17 +12,25 @@ if($db->connect_errno) {
 
 //ADD POST TO DATABASE
 if(isset($_POST['add'])){
-    //  -Prepare statement
-    $add_post = $db->prepare('INSERT INTO posts (title, author, date, contents) VALUES (?, ?, ?, ?)');
-    //  -Create value variables
-    $p_title = $_POST['title'];
-    $p_author = $_POST['author'];
-    $p_date = date('D, j M Y');
-    $p_contents = $_POST['contents'];
-    //  -Bind parameters to query
-    $add_post->bind_param('ssss', $p_title, $p_author, $p_date, $p_contents);
-    //  -Execute
-    $add_post->execute();
+    //  -Form Validation
+    if($_POST['title'] == "" || $_POST['author'] == "" ||
+        $_POST['contents'] == '' || $_POST['contents'] == 'Your post here...') {
+        $failure = true;
+    } else {
+        //  -Prepare statement
+        $add_post = $db->prepare('INSERT INTO posts (title, author, date, contents) VALUES (?, ?, ?, ?)');
+        //  -Create value variables
+        $p_title = $_POST['title'];
+        $p_author = $_POST['author'];
+        $p_date = date('D, j M Y, H:i');
+        $p_contents = $_POST['contents'];
+        //  -Bind parameters to query
+        $add_post->bind_param('ssss', $p_title, $p_author, $p_date, $p_contents);
+        //  -Execute
+        $add_post->execute();
+        //  -Redirect to index.php
+        header('Location: index.php');
+    }
 }
 
 //DELETE POST FROM DATABASE
@@ -37,12 +45,19 @@ if(isset($_POST['delete'])){
     $delete_post->execute();
 }
 
-//ACCESS DATABASE DATA
-//  -Prepare query statement
-$get_posts = $db->query('SELECT * FROM posts');
-
-//todo 404 page
-
+//SELECT POST
+if(isset($_GET['id'])){
+    //  -Prepare query
+    $select_post = $db->prepare('SELECT title, author, date, contents FROM posts WHERE id=?');
+    //  -Bind Parameters
+    $select_post->bind_param('i', $_GET['id']);
+    //  -Execute
+    $select_post->execute();
+    //  -Bind Result
+    $select_post->bind_result($title, $author, $date, $contents);
+    //  -Fetch Results
+    $select_post->fetch();
+}
 
 
 

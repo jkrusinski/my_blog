@@ -3,6 +3,10 @@
 //Connect to database
 include_once('db_info.php');
 
+//ACCESS DATABASE DATA
+//  -Prepare query statement
+$get_posts = $db->query('SELECT * FROM posts');
+
 ?>
 
 <!DOCTYPE html>
@@ -20,6 +24,7 @@ include_once('db_info.php');
                     <th>Date Added</th>
                     <th>Preview</th>
                     <th></th>
+                    <th>View Post</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +47,9 @@ include_once('db_info.php');
                             <input type="submit" name="delete" value="DELETE">
                             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                         </form>
+                    </td>
+                    <td>
+                        <a href="view_post.php?id=<?php echo $row['id']; ?>">View</a>
                     </td>
                 </tr>
             <?php } ?>
