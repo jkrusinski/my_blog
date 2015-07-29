@@ -15,10 +15,20 @@ include_once('db_info.php');
         <!--New Post-->
         <form action="edit_post.php" method="post">
 
-            <label>Title: <input type="text" name="title"></label><br>
-            <label>Author: <input type="text" name="author"></label><br>
-            <textarea name="contents" rows="10" cols="30">Enter your post here...</textarea><br>
-            <input type="submit" name="add" value="Post">
+            <?php
+            if (isset($_GET['id'])) { ?>
+                <label>Title: <input type="text" name="title" value="<?php echo $title; ?>"></label><br>
+                <label>Author: <input type="text" name="author" value="<?php echo $author; ?>"></label><br>
+                <textarea name="contents" rows="10" cols="30"><?php echo $contents; ?></textarea><br>
+                <input type="submit" name="edit" value="Update">
+                <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
+            <?php } else { ?>
+                <label>Title: <input type="text" name="title"></label><br>
+                <label>Author: <input type="text" name="author"></label><br>
+                <textarea name="contents" rows="10" cols="30">Enter your post here...</textarea><br>
+                <input type="submit" name="add" value="Post">
+            <?php } ?>
+
 
         </form>
 
