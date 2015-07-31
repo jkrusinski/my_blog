@@ -3,10 +3,6 @@
 //Connect to database
 include_once('db_info.php');
 
-//ACCESS DATABASE DATA
-//  -Prepare query statement
-$get_posts = $db->query('SELECT * FROM posts');
-
 ?>
 
 <!DOCTYPE html>
@@ -16,6 +12,10 @@ $get_posts = $db->query('SELECT * FROM posts');
         <meta charset="utf-8">
     </head>
     <body>
+        <form action="index.php" method="get">
+            <label>Search <input type="text" name="term"></label>
+            <input type="submit" name="search" value="Go">
+        </form>
         <table>
             <thead>
                 <tr>
@@ -30,33 +30,34 @@ $get_posts = $db->query('SELECT * FROM posts');
             </thead>
             <tbody>
             <?php
-            foreach($get_posts as $row) { ?>
-                <tr>
-                    <td><?php echo $row['title']; ?></td>
-                    <td><?php echo $row['author']; ?></td>
-                    <td><?php echo $row['date']; ?></td>
-                    <td><?php echo $row['date_mod']; ?></td>
-                    <td><?php
-                        $preview = substr($row['contents'], 0, 99);
-                        echo $preview;
-                        if (strlen($row['contents']) > 100) {
-                            echo '...';
-                        }
-                        ?>
-                    </td>
-                    <td>
-                        <form action="index.php" method="post">
-                            <input type="submit" name="delete" value="DELETE">
-                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                        </form>
-                    </td>
-                    <td>
-                        <a href="view_post.php?id=<?php echo $row['id']; ?>">View</a>
-                    </td>
-                </tr>
+                while($get_posts->fetch()){ ?>
+                    <tr>
+                        <td><?php echo $title; ?></td>
+                        <td><?php echo $author; ?></td>
+                        <td><?php echo $date; ?></td>
+                        <td><?php echo $date_mod; ?></td>
+                        <td><?php
+                            $preview = substr($contents, 0, 99);
+                            echo $preview;
+                            if (strlen($contents) > 100) {
+                                echo '...';
+                            }
+                            ?>
+                        </td>
+                        <td>
+                            <form action="index.php" method="post">
+                                <input type="submit" name="delete" value="DELETE">
+                                <input type="hidden" name="id" value="<?php echo $id; ?>">
+                            </form>
+                        </td>
+                        <td>
+                            <a href="view_post.php?id=<?php echo $id; ?>">View</a>
+                        </td>
+                    </tr>
             <?php } ?>
             </tbody>
         </table>
+        <a href="index.php">Home</a>
         <a href="edit_post.php">Add New Post</a>
     </body>
 </html>

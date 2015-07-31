@@ -11,6 +11,12 @@ if($db->connect_errno) {
 }
 
 //ADD POST TO DATABASE
+//  When a form is submitted with the key name 'add' for the submit variable,
+//  First check that the form is filled out correctly (form validation)
+//  If check passes, set up MySQL query to add row to the table 'posts'
+//  Use ->prepare->bind_param->execute() to ensure no malicious code is passed.
+//  After query is executed, redirect to the index.php page.
+//  This is so that if a post is added successfully, you will be able to see it in the index
 if(isset($_POST['add'])){
     //  -Form Validation
     if($_POST['title'] == "" || $_POST['author'] == "" ||
@@ -35,6 +41,12 @@ if(isset($_POST['add'])){
 }
 
 //SELECT POST
+//  For the view_post.php page, a single post must be selected.
+//  First a get variable is passed in the URL with the id number for the post wanted.
+//  This id number is used to select a table row with a MySQL query
+//  This query is set up with the prepare->bind_param->execute() structure to combat malicious code
+//  ->bind_result is used to add the results from SELECT to the $select_post object
+//  $select_post->fetch() pulls the variables declared in ->bind_result to be used in PHP
 if(isset($_GET['id'])){
     //  -Prepare query
     $select_post = $db->prepare('SELECT title, author, date, date_mod, contents FROM posts WHERE id=?');
@@ -49,6 +61,7 @@ if(isset($_GET['id'])){
 }
 
 //EDIT POST
+//
 if(isset($_POST['edit'])) {
     //  -Form Validation
     if($_POST['title'] == "" || $_POST['author'] == "" ||
@@ -87,6 +100,20 @@ if(isset($_POST['delete'])){
     //  -Execute
     $delete_post->execute();
 }
+
+//SEARCH FUNCTION
+if (isset($_GET['search'])) {
+    $get_posts = $db->prepare("SELECT * FROM posts WHERE contents LIKE ?");
+    $p_search = "%" . $_GET['term'] . "%";
+    $get_posts->bind_param('s', $p_search);
+    $get_posts->execute();
+    $get_posts->bind_result($id, $title, $author, $date, $date_mod, $contents);
+} else {
+    $get_posts = $db->prepare('SELECT * FROM posts');
+    $get_posts->execute();
+    $get_posts->bind_result($id, $title, $author, $date, $date_mod, $contents);
+}
+
 
 
 
