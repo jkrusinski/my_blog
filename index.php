@@ -22,9 +22,10 @@ $get_posts = $db->query('SELECT * FROM posts');
                     <th>Title</th>
                     <th>Author</th>
                     <th>Date Added</th>
+                    <th>Date Modified</th>
                     <th>Preview</th>
                     <th></th>
-                    <th>View Post</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +35,7 @@ $get_posts = $db->query('SELECT * FROM posts');
                     <td><?php echo $row['title']; ?></td>
                     <td><?php echo $row['author']; ?></td>
                     <td><?php echo $row['date']; ?></td>
+                    <td><?php echo $row['date_mod']; ?></td>
                     <td><?php
                         $preview = substr($row['contents'], 0, 99);
                         echo $preview;

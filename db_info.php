@@ -18,14 +18,15 @@ if(isset($_POST['add'])){
         $failure = true;
     } else {
         //  -Prepare statement
-        $add_post = $db->prepare('INSERT INTO posts (title, author, date, contents) VALUES (?, ?, ?, ?)');
+        $add_post = $db->prepare('INSERT INTO posts (title, author, date, date_mod, contents) VALUES (?, ?, ?, ?, ?)');
         //  -Create value variables
         $p_title = $_POST['title'];
         $p_author = $_POST['author'];
         $p_date = date('D, j M Y, H:i');
+        $p_date_mod = $p_date;
         $p_contents = $_POST['contents'];
         //  -Bind parameters to query
-        $add_post->bind_param('ssss', $p_title, $p_author, $p_date, $p_contents);
+        $add_post->bind_param('sssss', $p_title, $p_author, $p_date, $p_date_mod, $p_contents);
         //  -Execute
         $add_post->execute();
         //  -Redirect to index.php
@@ -36,13 +37,13 @@ if(isset($_POST['add'])){
 //SELECT POST
 if(isset($_GET['id'])){
     //  -Prepare query
-    $select_post = $db->prepare('SELECT title, author, date, contents FROM posts WHERE id=?');
+    $select_post = $db->prepare('SELECT title, author, date, date_mod, contents FROM posts WHERE id=?');
     //  -Bind Parameters
     $select_post->bind_param('i', $_GET['id']);
     //  -Execute
     $select_post->execute();
     //  -Bind Result
-    $select_post->bind_result($title, $author, $date, $contents);
+    $select_post->bind_result($title, $author, $date, $date_mod, $contents);
     //  -Fetch Results
     $select_post->fetch();
 }
@@ -56,14 +57,15 @@ if(isset($_POST['edit'])) {
     } else {
         //  -Prepare statement
         //  -todo: add date modified
-        $update_post = $db->prepare('UPDATE posts SET title=?,author=?,contents=? WHERE id=?');
+        $update_post = $db->prepare('UPDATE posts SET title=?,author=?,date_mod=?,contents=? WHERE id=?');
         //  -Create value variables
         $up_title = $_POST['title'];
         $up_author = $_POST['author'];
+        $up_date_mod= date('D, j M Y, H:i');
         $up_contents = $_POST['contents'];
         $up_id = $_POST['id'];
         //  -Bind parameters
-        $update_post->bind_param('sssi',$up_title, $up_author, $up_contents, $up_id);
+        $update_post->bind_param('ssssi',$up_title, $up_author, $up_date_mod, $up_contents, $up_id);
         //  -Execute
         $update_post->execute();
         //  -Redirect to view_post.php?id=...
