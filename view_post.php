@@ -22,6 +22,6 @@ include_once('db_info.php');
             </div>
         </div>
         <a href="index.php">Home</a>
-        <a href="edit_post.php?id=<?php echo $_GET['id'] ?>">Edit</a>
+        <a href="edit_post.php?id=<?php echo $_GET['id']; ?>">Edit</a>
     </body>
 </html>

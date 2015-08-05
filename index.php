@@ -1,5 +1,6 @@
 <?php
-
+//$index declared to set a trigger for a post pull query in db_info.php if no search is set
+$index = true;
 //Connect to database
 include_once('db_info.php');
 
@@ -37,9 +38,9 @@ include_once('db_info.php');
                         <td><?php echo $date; ?></td>
                         <td><?php echo $date_mod; ?></td>
                         <td><?php
-                            $preview = substr($contents, 0, 99);
+                            $preview = substr($contents, 0, 49);
                             echo $preview;
-                            if (strlen($contents) > 100) {
+                            if (strlen($contents) > 50) {
                                 echo '...';
                             }
                             ?>
