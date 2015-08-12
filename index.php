@@ -13,7 +13,7 @@ include_once('db_info.php');
         <meta charset="utf-8">
     </head>
     <body>
-        <form action="index.php" method="get">
+        <form action="index.php" method="GET">
             <label>Search <input type="text" name="term"></label>
             <input type="submit" name="search" value="Go">
         </form>
@@ -52,13 +52,14 @@ include_once('db_info.php');
                             </form>
                         </td>
                         <td>
-                            <a href="view_post.php?id=<?php echo $id; ?>">View</a>
+                            <a href="view_post.php?postid=<?php echo $id; ?>">View</a>
                         </td>
                     </tr>
             <?php } ?>
             </tbody>
         </table>
+        <!--todo - add search by tag-->
         <a href="index.php">Home</a>
-        <a href="edit_post.php">Add New Post</a>
+        <a href="new_post.php">Add New Post</a>
     </body>
 </html>

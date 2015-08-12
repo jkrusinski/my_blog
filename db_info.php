@@ -10,77 +10,106 @@ if($db->connect_errno) {
     exit();
 }
 
-//ADD POST TO DATABASE
-//  When a form is submitted with the key name 'add' for the submit variable,
-//  First check that the form is filled out correctly (form validation)
-//  If check passes, set up MySQL query to add row to the table 'posts'
-//  Use ->prepare->bind_param->execute() to ensure no malicious code is passed.
-//  If the add tag field is filled, execute tag functionality
-//  After query is executed, redirect to the index.php page.
-//  This is so that if a post is added successfully, you will be able to see it in the index
-if(isset($_POST['add'])){
-    //  -Form Validation
-    if($_POST['title'] == "" || $_POST['author'] == "" ||
-        $_POST['contents'] == '' || $_POST['contents'] == 'Your post here...') {
-        $failure = true;
-    } else {
-        //  -Prepare statement
-        $add_post = $db->prepare('INSERT INTO posts (title, author, date, date_mod, contents) VALUES (?, ?, ?, ?, ?)');
-        //  -Create value variables
-        $p_title = $_POST['title'];
-        $p_author = $_POST['author'];
-        $p_date = date('D, j M Y, H:i');
-        $p_date_mod = $p_date;
-        $p_contents = $_POST['contents'];
-        //  -Bind parameters to query
-        $add_post->bind_param('sssss', $p_title, $p_author, $p_date, $p_date_mod, $p_contents);
-        //  -Execute
-        $add_post->execute();
+class Post {
+    public $pID;
+    public $pTitle;
+    public $pAuthor;
+    public $pDate;
+    public $pMod;
+    public $pBody;
+    public $pTags; //an array... $pTags[tags.id => tags.tag]
+    public $gTags; //an array... $gTags[tags.id => tags.tag]
 
-        //ADD TAG
-        if($_POST['new_tag']) {
-            //newest post is post to be saved with tag
-            //save last post.id inserted into posts
-            $post_id = $db->insert_id;
-
-            //Insert tag into $db
-            $add_tag = $db->prepare('INSERT INTO tags (tag) VALUES (?)');
-            $tag_name = $_POST['new_tag'];
-            $add_tag->bind_param('s', $tag_name);
-            $add_tag->execute();
-            //Add id's to post_to_tags
-            $add_ids = $db->prepare('INSERT INTO posts_to_tags (post_id, tag_id) VALUES (?, ?)');
-            //save last tag.id inserted into tags
-            $tag_id = $db->insert_id;
-            $add_ids->bind_param('ii', $post_id, $tag_id);
-            $add_ids->execute();
-
-            //
-        }
-
-        //  -Redirect to index.php
-        header('Location: index.php');
+    public function __construct($pID, $pTitle, $pAuthor, $pDate, $pMod, $pBody, $pTags, $gTags) {
+        $this->pID = $pID;
+        $this->pTitle = $pTitle;
+        $this->pAuthor = $pAuthor;
+        $this->pDate = $pDate;
+        $this->pMod = $pMod;
+        $this->pBody = $pBody;
+        $this->pTags = $pTags;
+        $this->gTags = $gTags;
     }
 }
 
-//SELECT POST
+function grab_post_tags($post_id) {
+    global $db;
+    $tag_array = array();
+    $select_tag = $db->prepare('SELECT tags.id, tags.tag FROM tags, posts, posts_to_tags WHERE posts.id = posts_to_tags.post_id AND tags.id = posts_to_tags.tag_id AND posts.id = ?');
+    $select_tag->bind_param('i', $post_id);
+    $select_tag->execute();
+    $select_tag->bind_result($id, $tag);
+    while($select_tag->fetch()){
+        $tag_array[$id] = $tag;
+    }
+    $select_tag->close();
+    return $tag_array;
+}
+
+function grab_all_tags() {
+    global $db;
+    $tag_array = array();
+    $grab_query= $db->query('SELECT * FROM tags');
+    foreach($grab_query as $row){
+        $tag_array[$row['id']] = $row['tag'];
+    }
+    return $tag_array;
+}
+//todo SELECT POST comments
 //  For the view_post.php page, a single post must be selected.
 //  First a get variable is passed in the URL with the id number for the post wanted.
 //  This id number is used to select a table row with a MySQL query
 //  This query is set up with the prepare->bind_param->execute() structure to combat malicious code
 //  ->bind_result is used to add the results from SELECT to the $select_post object
 //  $select_post->fetch() pulls the variables declared in ->bind_result to be used in PHP
-if(isset($_GET['id'])){
+function grab_post($post_id) {
+    global $db;
+    $pTags = grab_post_tags($post_id);
+    $gTags = grab_all_tags();
     //  -Prepare query
     $select_post = $db->prepare('SELECT title, author, date, date_mod, contents FROM posts WHERE id=?');
     //  -Bind Parameters
-    $select_post->bind_param('i', $_GET['id']);
+    $select_post->bind_param('i', $post_id);
     //  -Execute
     $select_post->execute();
     //  -Bind Result
     $select_post->bind_result($title, $author, $date, $date_mod, $contents);
     //  -Fetch Results
     $select_post->fetch();
+    //Create post object
+    $newPost = new Post($post_id, $title, $author, $date, $date_mod, $contents, $pTags, $gTags);
+    //Close query
+    $select_post->close();
+    return $newPost;
+}
+
+//ADD TAG RELATIONSHIP
+function add_tag_relationship($post_id, $tag_id){
+    global $db;
+    $addRelationship = $db->prepare('INSERT INTO posts_to_tags (post_id, tag_id) VALUES (?, ?)');
+    $addRelationship->bind_param('ii', $post_id, $tag_id);
+    $addRelationship->execute();
+}
+
+//todo function add_tag comments
+function add_tag($post_id, $tag) {
+    global $db;
+    $tag = strtolower($tag);
+    //Insert tag into $db
+    $addTag = $db->prepare('INSERT INTO tags (tag) VALUES (?)');
+    $addTag->bind_param('s', $tag);
+    $addTag->execute();
+    $tagID = $db->insert_id;
+    //Add id's to post_to_tags
+    add_tag_relationship($post_id, $tagID);
+    return $tagID;
+}
+
+function remove_pTag($post_id, $tag_id) {
+    global $db;
+    $delTag = $db->prepare('DELETE FROM posts_to_tags WHERE post_id = ? AND tag_id = ?');
+    $delTag->bind_param('ii', $post_id, $tag_id);
+    $delTag->execute();
 }
 
 //EDIT POST
@@ -96,40 +125,14 @@ if(isset($_POST['edit'])) {
         $_POST['contents'] == '' || $_POST['contents'] == 'Your post here...') {
         $failure = true;
     } else {
-        //  -Prepare statement
+        //  -Prepare statement to update post
         $update_post = $db->prepare('UPDATE posts SET title=?,author=?,date_mod=?,contents=? WHERE id=?');
-        //  -Create value variables
-        $up_title = $_POST['title'];
-        $up_author = $_POST['author'];
         $up_date_mod= date('D, j M Y, H:i');
-        $up_contents = $_POST['contents'];
-        $up_id = $_POST['id'];
-        //  -Bind parameters
-        $update_post->bind_param('ssssi',$up_title, $up_author, $up_date_mod, $up_contents, $up_id);
-        //  -Execute
+        $update_post->bind_param('ssssi',$_POST['title'], $_POST['author'], $up_date_mod, $_POST['contents'], $_POST['id']);
         $update_post->execute();
 
-        //ADD TAG
-        if($_POST['new_tag']) {
-            //select post that should be involved with tag editing
-            $post_id = $_POST['id'];
-
-            //Insert tag into $db
-            $add_tag = $db->prepare('INSERT INTO tags (tag) VALUES (?)');
-            $tag_name = $_POST['new_tag'];
-            $add_tag->bind_param('s', $tag_name);
-            $add_tag->execute();
-            //Add id's to post_to_tags
-            $add_ids = $db->prepare('INSERT INTO posts_to_tags (post_id, tag_id) VALUES (?, ?)');
-            //save last tag.id inserted into tags
-            $tag_id = $db->insert_id;
-            $add_ids->bind_param('ii', $post_id, $tag_id);
-            $add_ids->execute();
-
-        }
-
         //  -Redirect to view_post.php?id=...
-        $loc = 'Location: view_post.php?id=' . $_POST['id'];
+        $loc = 'Location: view_post.php?postid=' . $_POST['id'];
         header($loc);
 
 
@@ -171,6 +174,8 @@ if (isset($_GET['search'])) {
     $get_posts->execute();
     $get_posts->bind_result($id, $title, $author, $date, $date_mod, $contents);
 }
+
+
 
 
 
