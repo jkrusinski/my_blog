@@ -1,6 +1,5 @@
 #tag_box {
-    border: 1px solid black;
-    width: 18em;
+    width: 100%;
     height: 10em;
     overflow: scroll;
 }
@@ -8,44 +7,35 @@
 /* Remove styling after framework is added */
 .tag {
     display: inline-block; /* keep */
-    border: 1px solid black;
-    background-color: #0f0f0f;
-    color: #f5f5f5;
-    border-radius: 0.4em;
-    padding: 0.5em 0.75em;
     margin: 0.5em 0 0.5em 0.5em;/* keep */
-    -webkit-box-shadow: 2px 2px 2px 2px #808080;
-    -moz-box-shadow: 2px 2px 2px 2px #808080;
-    box-shadow: 2px 2px 2px #808080;
 }
 
 #new-tag {
     width: 150px;
     position: relative;
-    margin-top: 10px;
     z-index: 5;
 }
 
 #suggestions {
-    position: relative;
-    top: -1px;
-    border: 1px ridge rgb(223, 223, 223);
-    width: 154px;
-    list-style-type: none;
+    position: absolute;
+    left: 126px;
+    width: 150px;
     padding: 0;
     margin-top: 0;
-    -webkit-box-shadow: 1px 1px 1px rgb(238, 238, 238);
-    -moz-box-shadow: 1px 1px 1px rgb(238, 238, 238);
-    box-shadow: 1px 1px 1px rgb(238, 238, 238);
     z-index: 1;
+    max-height: 225px;
+    overflow: scroll;
 }
 
-a {
+#suggestions-list {
+    list-style: none;
+}
+
+.gTag {
     display: inline-block;
     width: 100%;
 }
-a:focus {
-    outline: none;
+.gTag:focus {
     background-color: aqua;
 }
 
@@ -57,6 +47,45 @@ a:focus {
     display: inline-block;
 }
 
-span:hover {
-    cursor: hand;
+/*index.php*/
+#entry-index {
+    width: 80%;
+    margin: 0 auto 100px auto;
+    overflow: scroll;
 }
+
+
+th, td {
+    text-align: center;
+    vertical-align: middle !important;
+    padding: 5px 15px !important;
+}
+
+nav {
+    width: 80%;
+    margin: 30px auto 0 auto;
+}
+
+/*edit_post.php*/
+#edit-panel {
+    padding: 20px;
+    width: 50%;
+    margin: 30px auto;
+}
+
+a:focus {
+    outline: 0;
+}
+
+/*view_post.php*/
+#view-panel {
+    width: 50%;
+    margin: 30px auto;
+}
+
+#view-panel .panel-body {
+    padding: 20px;
+}
+
+
+

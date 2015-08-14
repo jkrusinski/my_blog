@@ -66,7 +66,7 @@ var main = function () {
                         $elID.hide().removeClass('visible').addClass('hidden');
                     }
                 }
-
+                //todo when new tag added, arrows stop functioning
                 //MOVE TO SUGGESTION
                 //  Controls movement of the focus on suggestions list
                 //  *** Up Arrow ***
@@ -127,12 +127,12 @@ var main = function () {
                         var tagID = xmlDoc.getElementsByTagName('tag_id')[0].childNodes[0].nodeValue;
                         var tagBody = xmlDoc.getElementsByTagName('tag_body')[0].childNodes[0].nodeValue;
                         //load into div#tag_box
-                        $tag_box.append('<span class="tag visible" id="pTag' + tagID + '">' + tagBody + '</span>');
+                        $tag_box.append('<span class="tag visible btn btn-info" id="pTag' + tagID + '">' + tagBody + '</span>');
                         //scroll to bottom of div#tag_box, this shows newest tag added
                         $tag_box.scrollTop($tag_box[0].scrollHeight);
                         //if a new tag is added, make sure it shows up in suggestions
                         if(status == 'New tag added.'){
-                            $suggestions.append('<li><a href="#" class="gTag key-sensitive" id="gTag' + tagID + '">' + tagBody + '</a></li>')
+                            $('#suggestions-list').append('<li><a href="#" class="gTag key-sensitive list-group-item" id="gTag' + tagID + '">' + tagBody + '</a></li>')
                         }
                     }
 

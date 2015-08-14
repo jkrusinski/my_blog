@@ -128,31 +128,17 @@ if(isset($_POST['edit'])) {
         //  -Prepare statement to update post
         $update_post = $db->prepare('UPDATE posts SET title=?,author=?,date_mod=?,contents=? WHERE id=?');
         $up_date_mod= date('D, j M Y, H:i');
-        $update_post->bind_param('ssssi',$_POST['title'], $_POST['author'], $up_date_mod, $_POST['contents'], $_POST['id']);
+        $update_post->bind_param('ssssi',$_POST['title'], $_POST['author'], $up_date_mod, $_POST['contents'], $_POST['postid']);
         $update_post->execute();
 
         //  -Redirect to view_post.php?id=...
-        $loc = 'Location: view_post.php?postid=' . $_POST['id'];
+        $loc = 'Location: view_post.php?postid=' . $_POST['postid'];
         header($loc);
 
 
     }
 }
 
-//DELETE POST FROM DATABASE
-//  The form passes the id value which is used to delete the post
-//  The DELETE query is prepared
-//  After the parameters are bound, the query is executed
-if(isset($_POST['delete'])){
-    //  -Prepare statement
-    $delete_post = $db->prepare('DELETE FROM posts WHERE id=?');
-    //  -Create value variables
-    $p_id = $_POST['id'];
-    //  -Bind parameters to query
-    $delete_post->bind_param('i', $p_id);
-    //  -Execute
-    $delete_post->execute();
-}
 
 //SEARCH / LIST POSTS
 //  Controls index.php
@@ -174,6 +160,7 @@ if (isset($_GET['search'])) {
     $get_posts->execute();
     $get_posts->bind_result($id, $title, $author, $date, $date_mod, $contents);
 }
+
 
 
 
