@@ -67,21 +67,23 @@ $post = grab_post($_GET['postid']);
                         </div>
                         <!--SUGGESTION DROP DOWN-->
                         <!--Prints values of gTags into a drop down list-->
-                        <div class="input-group">
-                            <span class="input-group-addon" id="new-tag-label">Add New Tag</span>
-                            <input type="text" name="new-tag" id="new-tag" class="key-sensitive form-control" aria-describedby="new-tag-label" autocomplete="off"/>
-                        </div>
-                        <div class="panel panel-default hidden" id="suggestions">
-                            <ul id="suggestions-list" class="list-group">
-                                <?php
-                                //Loop through $post->gTags
-                                //echo <li> elements for each tag, format:
-                                //<li><a href='#' id='gTag#'>value</a></li>
-                                foreach($post->gTags as $key => $value){
-                                    echo "<li><a href='#' class='gTag key-sensitive list-group-item' id='gTag$key'>$value</a></li>";
-                                }
-                                ?>
-                            </ul>
+                        <div id="suggestions-app">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="new-tag-label">Add New Tag</span>
+                                <input type="text" name="new-tag" id="new-tag" class="key-sensitive form-control" aria-describedby="new-tag-label" autocomplete="off"/>
+                            </div>
+                            <div class="panel panel-default hidden" id="suggestions">
+                                <ul id="suggestions-list" class="list-group">
+                                    <?php
+                                    //Loop through $post->gTags
+                                    //echo <li> elements for each tag, format:
+                                    //<li><a href='#' id='gTag#'>value</a></li>
+                                    foreach($post->gTags as $key => $value){
+                                        echo "<li><a href='#' class='gTag key-sensitive list-group-item' id='gTag$key'>$value</a></li>";
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

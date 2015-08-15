@@ -2,18 +2,27 @@
 
 include_once('../db_info.php');
 
-
+//set variables
 $postID =  $_GET['postid'];
 $tagID = $_GET['tagid'];
-$tag = strtolower($_GET['tag']);
-$post = grab_post($postID);
+$tag = strtolower($_GET['tag']);  //make lowercase to ensure no duplicates
+$post = grab_post($postID);       //create $post object
+
+/*
+ * XML STRUCTURE
+ * <tag>
+ *     <status></status>
+ *     <tag_id></tag_id>
+ *     <tag_body></tag_body>
+ * </tag>
+ */
 
 //XML declaration
-header('Content-type: text/xml');
+header('Content-type: text/xml');   //make this an XML file
 echo '<?xml version="1.0" encoding="utf-8"?>';
-echo '<tag>'; //root element
+echo '<tag>';                       //root element
 
-//ADD NEW TAG (if focus was on <input>)
+//ADD NEW TAG (if focus was on <input id='new-tag'>)
 if($tagID == 'new-tag'){
     $dupCheck = array_search($tag, $post->gTags);   //Duplicate Check: searches for tag in $posts->gTags (global)
     if($tag == '') {                                //if tag is blank, do nothing

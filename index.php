@@ -84,7 +84,7 @@ include_once('db_info.php');
                                 }
                                 ?>
                             </td>
-                            <td><!--todo - get these stupid buttons to center-->
+                            <td>
                                 <a class="btn btn-danger" href="delete_post.php?postid=<?php echo $id; ?>">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 </a>

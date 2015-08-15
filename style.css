@@ -1,10 +1,49 @@
+/*view_post.php*/
+#view-panel {
+    width: 50%;
+    margin: 30px auto;
+}
+
+#view-panel .panel-body {
+    padding: 20px;
+}
+
+/*index.php*/
+#entry-index {
+    width: 80%;
+    margin: 0 auto 100px auto;
+    overflow: scroll;
+}
+
+
+th, td {
+    text-align: center;
+    vertical-align: middle !important;
+    padding: 5px 15px !important;
+}
+
+nav {
+    width: 80%;
+    margin: 30px auto 0 auto;
+}
+
+/*edit_post.php*/
+#edit-panel {
+    padding: 20px;
+    width: 50%;
+    margin: 30px auto;
+}
+
+a:focus {
+    outline: 0;
+}
+
 #tag_box {
     width: 100%;
     height: 10em;
     overflow: scroll;
 }
 
-/* Remove styling after framework is added */
 .tag {
     display: inline-block; /* keep */
     margin: 0.5em 0 0.5em 0.5em;/* keep */
@@ -46,46 +85,3 @@
 .visible {
     display: inline-block;
 }
-
-/*index.php*/
-#entry-index {
-    width: 80%;
-    margin: 0 auto 100px auto;
-    overflow: scroll;
-}
-
-
-th, td {
-    text-align: center;
-    vertical-align: middle !important;
-    padding: 5px 15px !important;
-}
-
-nav {
-    width: 80%;
-    margin: 30px auto 0 auto;
-}
-
-/*edit_post.php*/
-#edit-panel {
-    padding: 20px;
-    width: 50%;
-    margin: 30px auto;
-}
-
-a:focus {
-    outline: 0;
-}
-
-/*view_post.php*/
-#view-panel {
-    width: 50%;
-    margin: 30px auto;
-}
-
-#view-panel .panel-body {
-    padding: 20px;
-}
-
-
-

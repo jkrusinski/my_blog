@@ -10,6 +10,9 @@ if($db->connect_errno) {
     exit();
 }
 
+//CLASS - POST
+//  This class is used to describe each post created by the user.
+//  See function grab_post()
 class Post {
     public $pID;
     public $pTitle;
@@ -32,40 +35,46 @@ class Post {
     }
 }
 
+//FUNCTION grab_post_tags($post_id)
+//  Returns an array of tags that are associated with a specific $post_id
 function grab_post_tags($post_id) {
-    global $db;
-    $tag_array = array();
+    global $db;                             //include db connection in function
+    $tag_array = array();                   //initialize return array
     $select_tag = $db->prepare('SELECT tags.id, tags.tag FROM tags, posts, posts_to_tags WHERE posts.id = posts_to_tags.post_id AND tags.id = posts_to_tags.tag_id AND posts.id = ?');
-    $select_tag->bind_param('i', $post_id);
+    $select_tag->bind_param('i', $post_id); //bind parameters to SELECT query
     $select_tag->execute();
     $select_tag->bind_result($id, $tag);
-    while($select_tag->fetch()){
-        $tag_array[$id] = $tag;
+    while($select_tag->fetch()){            //loop through fetch object
+        $tag_array[$id] = $tag;             //create a new key => value pair for each tag in result
     }
-    $select_tag->close();
+    $select_tag->close();                   //close query to open the session back up
     return $tag_array;
 }
 
+//FUNCTION grab_all_tags()
+//  Creates a list of all tags that exist in the blog
 function grab_all_tags() {
-    global $db;
-    $tag_array = array();
-    $grab_query= $db->query('SELECT * FROM tags');
-    foreach($grab_query as $row){
-        $tag_array[$row['id']] = $row['tag'];
+    global $db;                                     //include db connection in function
+    $tag_array = array();                           //initialize return array
+    $grab_query= $db->query('SELECT * FROM tags');  //send query
+    foreach($grab_query as $row){                   //loop through results
+        $tag_array[$row['id']] = $row['tag'];       //create a new key => value pair for each tag in result
     }
     return $tag_array;
 }
-//todo SELECT POST comments
-//  For the view_post.php page, a single post must be selected.
-//  First a get variable is passed in the URL with the id number for the post wanted.
+//FUNCTION grab_post($post_id)
+//  For multiple site pages, a single post must be selected.
+//  The posts.id key is passed through the function
 //  This id number is used to select a table row with a MySQL query
 //  This query is set up with the prepare->bind_param->execute() structure to combat malicious code
 //  ->bind_result is used to add the results from SELECT to the $select_post object
-//  $select_post->fetch() pulls the variables declared in ->bind_result to be used in PHP
+//  $select_post->fetch() pulls the variables and uses them to create a new Post object.
+//  The query is closed to make a new query available to be executed in the same session.
+//  The function returns the new object
 function grab_post($post_id) {
-    global $db;
-    $pTags = grab_post_tags($post_id);
-    $gTags = grab_all_tags();
+    global $db;                         //Include db connection in function
+    $pTags = grab_post_tags($post_id);  //Grab the tags associated with the post using grab_post_tags()
+    $gTags = grab_all_tags();           //Grabs global tags with grab_all_tags()
     //  -Prepare query
     $select_post = $db->prepare('SELECT title, author, date, date_mod, contents FROM posts WHERE id=?');
     //  -Bind Parameters
@@ -83,7 +92,8 @@ function grab_post($post_id) {
     return $newPost;
 }
 
-//ADD TAG RELATIONSHIP
+//FUNCTION add_tag_relationship($post_id, $tag_id)
+//  adds a post/tag relationship with $post_id and $tag_id into the posts_to_tags table
 function add_tag_relationship($post_id, $tag_id){
     global $db;
     $addRelationship = $db->prepare('INSERT INTO posts_to_tags (post_id, tag_id) VALUES (?, ?)');
@@ -91,20 +101,25 @@ function add_tag_relationship($post_id, $tag_id){
     $addRelationship->execute();
 }
 
-//todo function add_tag comments
+//FUNCTION add_tag($post_id, $tag)
+//  Creates a new tag in the tags table
+//  Also adds a post/tag relationship using add_tag_relationship($post_id, $tag_id)
 function add_tag($post_id, $tag) {
     global $db;
-    $tag = strtolower($tag);
+    $tag = strtolower($tag);        //make all tags lowercase
     //Insert tag into $db
     $addTag = $db->prepare('INSERT INTO tags (tag) VALUES (?)');
     $addTag->bind_param('s', $tag);
     $addTag->execute();
-    $tagID = $db->insert_id;
+    $tagID = $db->insert_id;        //save the newest made tags.id using ->insert_id property
     //Add id's to post_to_tags
     add_tag_relationship($post_id, $tagID);
-    return $tagID;
+    return $tagID;                  //returns the newly created tag id
 }
 
+//FUNCTION remove_pTag($post_id, $tag_id)
+//  Removes a relationship from posts_to_tags
+//  DOES NOT remove anything from my_blog.posts or my_blog.tags.
 function remove_pTag($post_id, $tag_id) {
     global $db;
     $delTag = $db->prepare('DELETE FROM posts_to_tags WHERE post_id = ? AND tag_id = ?');
@@ -158,7 +173,7 @@ if (isset($_GET['search'])) {
 } elseif (isset($index)) {
     $get_posts = $db->prepare('SELECT * FROM posts');
     $get_posts->execute();
-    $get_posts->bind_result($id, $title, $author, $date, $date_mod, $contents);
+    $get_posts->bind_result($id, $title, $author, $date, $date_mod, $contents); //todo - make these variables available in index.php
 }
 
 
