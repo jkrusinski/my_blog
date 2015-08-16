@@ -12,3 +12,4 @@ $add_post->execute();
 $redirect = 'Location: edit_post.php?postid=' . $db->insert_id;
 //  -Redirect to index.php
 header($redirect);
+//todo - make the post delete if fields are not updated by edit_post.php

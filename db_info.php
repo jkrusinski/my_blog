@@ -139,6 +139,10 @@ if(isset($_POST['edit'])) {
     if($_POST['title'] == "" || $_POST['author'] == "" ||
         $_POST['contents'] == '' || $_POST['contents'] == 'Your post here...') {
         $failure = true;
+
+        //  -Redirect back to edit_post.php?postid=...
+        $loc = 'Location: edit_post.php?postid=' . $_POST['postid'];
+        header($loc);
     } else {
         //  -Prepare statement to update post
         $update_post = $db->prepare('UPDATE posts SET title=?,author=?,date_mod=?,contents=? WHERE id=?');
@@ -149,8 +153,6 @@ if(isset($_POST['edit'])) {
         //  -Redirect to view_post.php?id=...
         $loc = 'Location: view_post.php?postid=' . $_POST['postid'];
         header($loc);
-
-
     }
 }
 

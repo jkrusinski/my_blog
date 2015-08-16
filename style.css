@@ -1,17 +1,25 @@
+
 /*view_post.php*/
 #view-panel {
-    width: 50%;
-    margin: 30px auto;
+    /*margin: 30px auto;*/
+    padding: 0;
 }
 
 #view-panel .panel-body {
     padding: 20px;
 }
 
+#view-tags {
+    padding: 0;
+}
+
+#view-tags li {
+    margin-bottom: 5px;
+}
+
 /*index.php*/
 #entry-index {
-    width: 80%;
-    margin: 0 auto 100px auto;
+    padding: 0;
     overflow: scroll;
 }
 
@@ -23,15 +31,12 @@ th, td {
 }
 
 nav {
-    width: 80%;
     margin: 30px auto 0 auto;
 }
 
 /*edit_post.php*/
 #edit-panel {
-    padding: 20px;
-    width: 50%;
-    margin: 30px auto;
+    padding: 0
 }
 
 a:focus {
@@ -39,6 +44,15 @@ a:focus {
 }
 
 #tag_box {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f9f9f9+0,ededed+100 */
+    background: rgb(249,249,249); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(249,249,249,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(249,249,249,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(249,249,249,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(249,249,249,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(249,249,249,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(249,249,249,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
     width: 100%;
     height: 10em;
     overflow: scroll;
@@ -84,4 +98,25 @@ a:focus {
 
 .visible {
     display: inline-block;
+}
+
+/*Delete warning*/
+#delete-warning, #cancel-edit-warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(120,120,120, .8);
+    z-index: 10;
+}
+
+#delete-warning > div,
+#cancel-edit-warning > div {
+    padding: 0;
+    position: fixed;
+    top: 35%;
+    margin: 0 auto 0 auto;
+    right: 0;
+    left: 0;
 }

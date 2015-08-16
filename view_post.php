@@ -3,7 +3,7 @@
 //connect to database
 include_once('db_info.php');
 
-$viewPost = grab_post($_GET['postid']);
+$post = grab_post($_GET['postid']);
 
 ?>
 
@@ -20,26 +20,100 @@ $viewPost = grab_post($_GET['postid']);
         <link href="style.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
-        <div class="panel panel-default" id="view-panel">
-            <div class="panel-heading">
-                <h1 class="panel-title">Entry</h1>
+        <div class="row">
+            <div class="col-xs-1 col-sm-2 col-md-3">&nbsp</div>
+            <nav class="navbar navbar-default col-xs-10 col-sm-8 col-md-6">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="index.php">Cloud Journal</a>
+                    </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                        <p class="navbar-text visible-lg-inline visible-xs">by Jerry Krusinski</p>
+
+                        <form action ="index.php" method="get" class="navbar-form navbar-right" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search" name="term">
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                            <input type="hidden" name="search">
+                        </form>
+                    </div>
+                </div>
+            </nav>
+            <div class="col-xs-1 col-sm-2 col-md-3">&nbsp</div>
+        </div>
+
+        <!--todo - make this page more readable -->
+
+        <div class="row">
+            <div class="col-xs-1 col-sm-2 col-md-3">&nbsp</div>
+            <div class="panel panel-info col-xs-10 col-sm-8 col-md-6" id="view-panel">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Entry</h1>
+                </div>
+                <div class="panel-body">
+                    <h1><?php echo $post->pTitle; ?><br /><small>By <?php echo $post->pAuthor; ?></small></h1>
+                    <h5>Date Created: <small><?php echo $post->pDate; ?></small></h5>
+                    <?php
+                    if ($post->pMod != '') { ?>
+                    <h5>Date Modified: <small><?php echo $post->pMod; ?></small></h5>
+                    <?php } ?>
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <?php echo $post->pBody; ?>
+                        </div>
+                    </div>
+
+                    <h5>Tags:</h5>
+                    <ul id="view-tags">
+                    <?php
+                    foreach($post->pTags as $i){ ?>
+                        <li class="btn btn-default"><?php echo $i; ?></li>
+                    <?php } ?>
+                    </ul>
+                </div>
+                <div class="panel-footer">
+
+                    <!-- Delete Button -->
+                    <button class="btn btn-danger post-delete" data-post-id="<?php echo $post->pID; ?>">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+                    </button>
+
+                    <!-- Edit Button -->
+                    <a href="edit_post.php?postid=<?php echo $post->pID; ?>" class="btn btn-warning">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+                    </a>
+
+                    <!-- Home Button -->
+                    <a href="index.php" class="btn btn-primary pull-right">
+                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home
+                    </a>
+
+                </div>
             </div>
-            <div class="panel-body">
-                <h1><?php echo $viewPost->pTitle; ?><br /><small>By <?php echo $viewPost->pAuthor; ?></small></h1>
-                <h5>Date Created: <small><?php echo $viewPost->pDate; ?></small></h5>
-                <h5>Date Modified: <small><?php echo $viewPost->pMod; ?></small></h5>
-                <p><?php echo $viewPost->pBody; ?></p>
-                <h5>Tags:</h5>
-                <ul style="padding: 0;">
-                <?php
-                foreach($viewPost->pTags as $i){ ?>
-                    <li class="btn btn-default"><?php echo $i; ?></li>
-                <?php } ?>
-                </ul>
-            </div>
-            <div class="panel-footer">
-                <a href="index.php" class="btn btn-primary">Home</a>
-                <a href="edit_post.php?postid=<?php echo $_GET['postid']; ?>" class="btn btn-default pull-right">Edit</a>
+            <div class="col-xs-1 col-sm-2 col-md-3">&nbsp</div>
+        </div>
+
+        <div id="delete-warning" class="hidden">
+            <div class="panel panel-danger col-xs-10 col-sm-4">
+                <div class="panel-heading"><h1 class="panel-title">WARNING</h1></div>
+                <div class="panel-body">
+                    Are you sure you want to delete this post? This change is permanent and cannot be undone.
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-danger delete" id="deleteID">I'm sure</button>
+                    <button class="btn btn-default pull-right" id="nevermind">Nevermind</button>
+                </div>
             </div>
         </div>
 
