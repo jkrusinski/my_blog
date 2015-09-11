@@ -34,6 +34,21 @@ nav {
     margin: 30px auto 0 auto;
 }
 
+#tag-sort-panel {
+    padding: 0;
+    text-align: center;
+}
+
+.tag-sort {
+    display: inline-block;
+    margin: 5px 2px;
+
+}
+
+.title {
+    font-weight: bold;
+}
+
 /*edit_post.php*/
 #edit-panel {
     padding: 0
@@ -44,7 +59,7 @@ a:focus {
 }
 
 #tag_box {
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f9f9f9+0,ededed+100 */
+    /*Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f9f9f9+0,ededed+100 */
     background: rgb(249,249,249); /* Old browsers */
     background: -moz-linear-gradient(top,  rgba(249,249,249,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(249,249,249,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
@@ -120,3 +135,25 @@ a:focus {
     right: 0;
     left: 0;
 }
+
+/*Login*/
+#login-panel {
+    padding: 0;
+    margin-top: 100px;
+}
+
+.bottom-space {
+    margin-bottom: 10px;
+}
+
+/*New User*/
+#new-usr-panel {
+    padding: 0;
+    margin-top: 100px;
+}
+
+.navbar-form input,
+.navbar-form button {
+    display: inline-block;
+}
+

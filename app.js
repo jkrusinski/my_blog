@@ -67,6 +67,10 @@ var main = function () {
     ******************* APPLICATION EVENTS *******************
     **********************************************************/
 
+
+
+   /******************* TAG FUNCTIONALITY ********************/
+
     //**EVENT: ON KEYPRESS
     //  For the tag input, if 'enter' is pressed, make sure form does not submit
     $new_tag.on('keypress', function(e){
@@ -113,7 +117,6 @@ var main = function () {
                         $elID.hide().removeClass('visible').addClass('hidden');
                     }
                 }
-
                 //MOVE TO SUGGESTION
                 //  Controls movement of the focus on suggestions list
                 //  *** Up Arrow ***
@@ -211,7 +214,11 @@ var main = function () {
         }
     });
 
+   /******************* WARNINGS ********************/
 
+   /**
+    **   DELETING POSTS
+    **/
 
     //**EVENT: ON CLICK - DELETE POST
     $('.post-delete').on('click', function() {                          //on click a post trash button
@@ -237,6 +244,10 @@ var main = function () {
        }
     });
 
+    /**
+     **   CANCEL EDIT
+     **/
+
     //**EVENT: ON CLICK - CANCEL EDIT
     //todo - remove the tags that were added during editing
     $('#edit-cancel').on('click', function() {                          //event on cancel button in edit_post.php
@@ -254,7 +265,14 @@ var main = function () {
 
     //**EVENT: ON CLICK - CANCEL EDIT I'M SURE
     $('#confirm-cancel').on('click', function() {                       //i'm sure - cancel edit
-        window.location = 'index.php';                                  //go to index.php
+        //if user has not changed the default value of the post, delete it
+        //todo - not a complete solution, if post changed and edit canceled, post not deleted
+        if($('#input-body').val() == 'Your post goes here...' && $('#input-title').val() == "New Post") {
+            window.location = 'delete_post.php?postid=' + $(this).data('postid');
+        } else {
+            window.location = 'index.php';                                  //go to index.php
+        }
+
     });
 
 };

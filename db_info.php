@@ -1,7 +1,8 @@
 <?php
 
 //create database connection
-$db = new mysqli('localhost', 'root', 'root', 'my_blog');
+$db = new mysqli('localhost', 'root', 'root', 'my_blog'); //ACA Local Environment
+//$db = new mysqli('my-db-instance.cvtdplpfiqkc.us-west-2.rds.amazonaws.com', 'db_user', 'Jm4RHzy889', 'cloud_journal');
 
 //connection error handler
 if($db->connect_errno) {
@@ -52,14 +53,23 @@ function grab_post_tags($post_id) {
 }
 
 //FUNCTION grab_all_tags()
-//  Creates a list of all tags that exist in the blog
+//  Creates a list of all tags that exist in the blog PER USER
 function grab_all_tags() {
     global $db;                                     //include db connection in function
     $tag_array = array();                           //initialize return array
-    $grab_query= $db->query('SELECT * FROM tags');  //send query
-    foreach($grab_query as $row){                   //loop through results
-        $tag_array[$row['id']] = $row['tag'];       //create a new key => value pair for each tag in result
+    $lg_query = 'SELECT tags.id, tags.tag ';
+    $lg_query .= 'FROM posts, tags, posts_to_tags ';
+    $lg_query .= 'WHERE posts.id = posts_to_tags.post_id ';
+    $lg_query .= 'AND tags.id = posts_to_tags.tag_id ';
+    $lg_query .= 'AND posts.author = ?';
+    $grab_query = $db->prepare($lg_query);//prepare query
+    $grab_query->bind_param('s', $_SESSION['user']);
+    $grab_query->execute();
+    $grab_query->bind_result($id, $tag);            //bind results
+    while($grab_query->fetch()) {                   //loop through results with fetch
+        $tag_array[$id] = $tag;                     //create a new key => value pair for each tag in result
     }
+    $grab_query->close();                           //close query to open the session back up
     return $tag_array;
 }
 //FUNCTION grab_post($post_id)
@@ -136,7 +146,7 @@ function remove_pTag($post_id, $tag_id) {
 //  The page redirects to view_post.php?id=...
 if(isset($_POST['edit'])) {
     //  -Form Validation
-    if($_POST['title'] == "" || $_POST['author'] == "" ||
+    if($_POST['title'] == "" ||
         $_POST['contents'] == '' || $_POST['contents'] == 'Your post here...') {
         $failure = true;
 
@@ -145,9 +155,9 @@ if(isset($_POST['edit'])) {
         header($loc);
     } else {
         //  -Prepare statement to update post
-        $update_post = $db->prepare('UPDATE posts SET title=?,author=?,date_mod=?,contents=? WHERE id=?');
-        $up_date_mod= date('D, j M Y, H:i');
-        $update_post->bind_param('ssssi',$_POST['title'], $_POST['author'], $up_date_mod, $_POST['contents'], $_POST['postid']);
+        $update_post = $db->prepare('UPDATE posts SET title=?,date_mod=?,contents=? WHERE id=?');
+        $up_date_mod= date('D, d M Y, H:i');
+        $update_post->bind_param('sssi',$_POST['title'], $up_date_mod, $_POST['contents'], $_POST['postid']);
         $update_post->execute();
 
         //  -Redirect to view_post.php?id=...
@@ -157,26 +167,8 @@ if(isset($_POST['edit'])) {
 }
 
 
-//SEARCH / LIST POSTS
-//  Controls index.php
-//  If search is set, query is prepared using SELECT WHERE and LIKE
-//  Parameters are bound with the search term
-//  Executed
-//  Finally ->bind_result is used to retrieve results
-//  If no search is entered, a simple SELECT query is prepared to list all posts
-//  This is set up in a ->prepare->execute->bind_result formula to keep index.php HTML simple
-//  ->fetch() is called in the index.php page
-if (isset($_GET['search'])) {
-    $get_posts = $db->prepare("SELECT * FROM posts WHERE contents LIKE ?");
-    $p_search = "%" . $_GET['term'] . "%";
-    $get_posts->bind_param('s', $p_search);
-    $get_posts->execute();
-    $get_posts->bind_result($id, $title, $author, $date, $date_mod, $contents);
-} elseif (isset($index)) {
-    $get_posts = $db->prepare('SELECT * FROM posts');
-    $get_posts->execute();
-    $get_posts->bind_result($id, $title, $author, $date, $date_mod, $contents); //todo - make these variables available in index.php
-}
+
+
 
 
 

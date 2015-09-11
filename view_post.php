@@ -1,4 +1,10 @@
 <?php
+//open $session
+session_start();
+//if user is not logged in, go to login index
+if(!isset($_SESSION['user'])) {
+    header('Location: user/login.php');
+}
 
 //connect to database
 include_once('db_info.php');
@@ -20,89 +26,104 @@ $post = grab_post($_GET['postid']);
         <link href="style.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
-        <div class="row">
-            <div class="col-xs-1 col-sm-2 col-md-3">&nbsp</div>
-            <nav class="navbar navbar-default col-xs-10 col-sm-8 col-md-6">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="index.php">Cloud Journal</a>
-                    </div>
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-                        <p class="navbar-text visible-lg-inline visible-xs">by Jerry Krusinski</p>
-
-                        <form action ="index.php" method="get" class="navbar-form navbar-right" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search" name="term">
+        <div class="container">
+            <div class="row">
+                <div class="hidden-xs col-sm-2">&nbsp</div>
+                <div class="col-xs-12 col-sm-8">
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <!-- Brand and toggle get grouped for better mobile display -->
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="#">Cloud Journal</a>
                             </div>
-                            <button type="submit" class="btn btn-default">Submit</button>
-                            <input type="hidden" name="search">
-                        </form>
-                    </div>
+                            <!-- Collect the nav links, forms, and other content for toggling -->
+                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                                <p class="navbar-text hidden-sm">
+                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                    <?php echo $_SESSION['user']; ?>
+                                </p>
+
+                                <ul class="nav navbar-nav hidden-sm">
+                                    <li><a href="user/logout.php">Logout</a></li>
+                                </ul>
+
+                                <form action ="index.php" method="get" class="navbar-form navbar-right" role="search">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Search" name="term">
+                                    </div>
+                                    <button type="submit" class="btn btn-default">Submit</button>
+                                    <input type="hidden" name="search">
+                                </form>
+
+                            </div>
+                        </div>
+                    </nav>
                 </div>
-            </nav>
-            <div class="col-xs-1 col-sm-2 col-md-3">&nbsp</div>
-        </div>
+                <div class="hidden-xs col-sm-2">&nbsp</div>
+            </div>
 
-        <!--todo - make this page more readable -->
+            <!--todo - make this page more readable -->
 
-        <div class="row">
-            <div class="col-xs-1 col-sm-2 col-md-3">&nbsp</div>
-            <div class="panel panel-info col-xs-10 col-sm-8 col-md-6" id="view-panel">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Entry</h1>
-                </div>
-                <div class="panel-body">
-                    <h1><?php echo $post->pTitle; ?><br /><small>By <?php echo $post->pAuthor; ?></small></h1>
-                    <h5>Date Created: <small><?php echo $post->pDate; ?></small></h5>
-                    <?php
-                    if ($post->pMod != '') { ?>
-                    <h5>Date Modified: <small><?php echo $post->pMod; ?></small></h5>
-                    <?php } ?>
-
-                    <div class="panel panel-default">
+            <div class="row">
+                <div class="hidden-xs col-sm-2">&nbsp</div>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="panel panel-info" id="view-panel">
+                        <div class="panel-heading">
+                            <h1 class="panel-title">Entry</h1>
+                        </div>
                         <div class="panel-body">
-                            <?php echo $post->pBody; ?>
+                            <h1><?php echo $post->pTitle; ?><br /><small>By <?php echo $post->pAuthor; ?></small></h1>
+                            <h5>Date Created: <small><?php echo $post->pDate; ?></small></h5>
+                            <?php
+                            if ($post->pMod != '') { ?>
+                            <h5>Date Modified: <small><?php echo $post->pMod; ?></small></h5>
+                            <?php } ?>
+
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <?php echo $post->pBody; ?>
+                                </div>
+                            </div>
+
+                            <h5>Tags:</h5>
+                            <ul id="view-tags">
+                            <?php
+                            foreach($post->pTags as $i){ ?>
+                                <li class="btn btn-default"><?php echo $i; ?></li>
+                            <?php } ?>
+                            </ul>
+                        </div>
+                        <div class="panel-footer">
+
+                            <!-- Delete Button -->
+                            <button class="btn btn-danger post-delete" data-post-id="<?php echo $post->pID; ?>">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+                            </button>
+
+                            <!-- Edit Button -->
+                            <a href="edit_post.php?postid=<?php echo $post->pID; ?>" class="btn btn-warning">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+                            </a>
+
+                            <!-- Home Button -->
+                            <a href="index.php" class="btn btn-primary pull-right">
+                                <span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home
+                            </a>
+
                         </div>
                     </div>
-
-                    <h5>Tags:</h5>
-                    <ul id="view-tags">
-                    <?php
-                    foreach($post->pTags as $i){ ?>
-                        <li class="btn btn-default"><?php echo $i; ?></li>
-                    <?php } ?>
-                    </ul>
                 </div>
-                <div class="panel-footer">
-
-                    <!-- Delete Button -->
-                    <button class="btn btn-danger post-delete" data-post-id="<?php echo $post->pID; ?>">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
-                    </button>
-
-                    <!-- Edit Button -->
-                    <a href="edit_post.php?postid=<?php echo $post->pID; ?>" class="btn btn-warning">
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
-                    </a>
-
-                    <!-- Home Button -->
-                    <a href="index.php" class="btn btn-primary pull-right">
-                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home
-                    </a>
-
-                </div>
+                <div class="hidden-xs col-sm-2">&nbsp</div>
             </div>
-            <div class="col-xs-1 col-sm-2 col-md-3">&nbsp</div>
         </div>
+
 
         <div id="delete-warning" class="hidden">
             <div class="panel panel-danger col-xs-10 col-sm-4">

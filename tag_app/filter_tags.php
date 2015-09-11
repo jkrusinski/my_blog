@@ -1,5 +1,6 @@
 <?php
 include_once('../db_info.php');
+session_start();
 
 $filter = $_GET['filter'];
 
@@ -25,6 +26,7 @@ $len = strlen($filter);
 header("Content-type: text/xml");
 echo "<?xml version='1.0' encoding='utf-8'?>";  //doctype
 echo "<suggestions>";                           //root tag
+
 
 echo "<in_filter>";
 //loop through tags

@@ -2,6 +2,7 @@
 //Delete tag from post
 
 include_once('../db_info.php');
+session_start();
 
 $postID = $_GET['postid'];
 $tagID = $_GET['tagid'];

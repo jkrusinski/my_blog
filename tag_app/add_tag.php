@@ -1,6 +1,7 @@
 <?php
 
 include_once('../db_info.php');
+session_start();
 
 //set variables
 $postID =  $_GET['postid'];

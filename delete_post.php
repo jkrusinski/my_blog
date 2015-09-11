@@ -1,5 +1,6 @@
 <?php
 include_once('db_info.php');
+session_start();
 //DELETE POST FROM DATABASE
 //  The form passes the id value which is used to delete the post
 //  The DELETE query is prepared
