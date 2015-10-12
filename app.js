@@ -71,6 +71,8 @@ var main = function () {
 
    /******************* TAG FUNCTIONALITY ********************/
 
+   //todo make field empty once tag is added
+
     //**EVENT: ON KEYPRESS
     //  For the tag input, if 'enter' is pressed, make sure form does not submit
     $new_tag.on('keypress', function(e){

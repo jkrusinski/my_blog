@@ -3,6 +3,8 @@
 include_once('../db_info.php');
 session_start();
 
+//todo if tag added from two different accounts, duplicate will be made
+
 //set variables
 $postID =  $_GET['postid'];
 $tagID = $_GET['tagid'];
