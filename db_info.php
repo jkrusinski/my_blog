@@ -1,8 +1,7 @@
 <?php
 
 //create database connection
-$db = new mysqli('localhost', 'root', 'root', 'my_blog'); //ACA Local Environment
-//$db = new mysqli('my-db-instance.cvtdplpfiqkc.us-west-2.rds.amazonaws.com', 'db_user', 'Jm4RHzy889', 'cloud_journal');
+$db = new mysqli('localhost', 'root', 'AQR5rlyb5ipU', 'cloud_journal'); 
 
 //connection error handler
 if($db->connect_errno) {
@@ -165,15 +164,3 @@ if(isset($_POST['edit'])) {
         header($loc);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
