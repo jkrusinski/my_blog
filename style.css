@@ -140,11 +140,18 @@ a:focus {
 #login-panel {
     padding: 0;
     margin-top: 100px;
+    margin-bottom: 0;
 }
 
 .bottom-space {
     margin-bottom: 10px;
 }
+
+.center {
+    width: 100%;
+    text-align: center;
+}
+
 
 /*New User*/
 #new-usr-panel {

@@ -2,7 +2,6 @@
 
 //create database connection
 $db = new mysqli('localhost', 'root', 'root', 'my_blog'); //ACA Local Environment
-//$db = new mysqli('my-db-instance.cvtdplpfiqkc.us-west-2.rds.amazonaws.com', 'db_user', 'Jm4RHzy889', 'cloud_journal');
 
 //connection error handler
 if($db->connect_errno) {
