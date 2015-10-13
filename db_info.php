@@ -1,11 +1,10 @@
 <?php
 
 //create database connection
-<<<<<<< HEAD
-$db = new mysqli('localhost', 'root', 'AQR5rlyb5ipU', 'cloud_journal'); 
-=======
+
+//$db = new mysqli('localhost', 'root', 'AQR5rlyb5ipU', 'cloud_journal');
 $db = new mysqli('localhost', 'root', 'root', 'my_blog'); //ACA Local Environment
->>>>>>> 5496e9b012be2207e8742a17efe618e2912e8ae4
+
 
 //connection error handler
 if($db->connect_errno) {
