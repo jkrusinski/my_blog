@@ -148,8 +148,9 @@ function remove_pTag($post_id, $tag_id) {
 //  The page redirects to view_post.php?id=...
 if(isset($_POST['edit'])) {
     //  -Form Validation
-    if($_POST['title'] == "" ||
-        $_POST['contents'] == '' || $_POST['contents'] == 'Your post here...') {
+    if ($_POST['title'] == "" ||
+        $_POST['contents'] == '' || $_POST['contents'] == 'Your post here...'
+    ) {
         $failure = true;
 
         //  -Redirect back to edit_post.php?postid=...
@@ -158,10 +159,13 @@ if(isset($_POST['edit'])) {
     } else {
         //  -Prepare statement to update post
         $update_post = $db->prepare('UPDATE posts SET title=?,date_mod=?,contents=? WHERE id=?');
-        $up_date_mod= date('D, d M Y, H:i');
-        $update_post->bind_param('sssi',$_POST['title'], $up_date_mod, $_POST['contents'], $_POST['postid']);
+        $up_date_mod = date('D, d M Y, H:i');
+        $update_post->bind_param('sssi', $_POST['title'], $up_date_mod, $_POST['contents'], $_POST['postid']);
         $update_post->execute();
 
         //  -Redirect to view_post.php?id=...
         $loc = 'Location: view_post.php?postid=' . $_POST['postid'];
         header($loc);
+
+    }
+}
