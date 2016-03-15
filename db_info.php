@@ -1,9 +1,10 @@
 <?php
 
-//create database connection
+$string = file_get_contents('config.json');
+$config = json_decode($string, true);
 
-//$db = new mysqli('localhost', 'root', 'AQR5rlyb5ipU', 'cloud_journal');
-$db = new mysqli('localhost', 'root', 'root', 'my_blog'); //ACA Local Environment
+//create database connection
+$db = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
 
 
 //connection error handler
