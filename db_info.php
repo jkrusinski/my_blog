@@ -1,6 +1,6 @@
 <?php
 
-$string = file_get_contents('config.json');
+$string = file_get_contents(__DIR__ . '/config.json');
 $config = json_decode($string, true);
 
 //create database connection
